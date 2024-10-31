@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Endless Runner</title>
+  <style>
+    body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; position: relative; }
+    canvas { border: 1px solid black; display: block; }
+    #gameOverMessage { position: absolute; text-align: center; font-size: 30px; color: red; display: none; }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <div id="gameOverMessage">Game Over!<br>Your Final Score: <span id="finalScore"></span><br>Press 'R' to Restart</div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const gameOverMessage = document.getElementById('gameOverMessage');
+    const finalScoreElement = document.getElementById('finalScore');
+
+    // Game variables
+    let player = {
+      x: 50,
+      y: 0,
+      width: 0,
+      height: 0,
+      dy: 0,
+      isJumping: false,
+      isDoubleJumping: false
+    };
+    let bullets = []; // Array to store bullets
+    let obstacles = [];
+    let score = 0;
+    let lastSpawnTime = 0;
+    const maxObstacles = 5; // Maximum number of active obstacles
+    let gravity; // Gravity will be defined dynamically
+    let jumpVelocity; // Jump velocity will be defined dynamically
+    let obstacleSpeed = 5; // Speed of obstacle movement
+    let obstacleSpawnInterval = 2000; // Initial spawn interval
+    let bulletCooldown = 300; // Bullet cooldown time in milliseconds
+    let lastBulletTime = 0; // Track the last bullet time
+    let gameInterval; // Variable to hold the animation frame ID
+    let gameRunning = false; // Flag to track if the game is running
+
+    // Function to set canvas size based on window dimensions
+    function resizeCanvas() {
+      const aspectRatio = 800 / 400; // Set the aspect ratio (width / height)
+      const newWidth = window.innerWidth < 800 ? window.innerWidth : 800;
+      const newHeight = newWidth / aspectRatio;
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+
+      // Update player dimensions based on canvas size
+      player.width = newWidth * 0.0625; // Player width as 1/16th of the canvas width
+      player.height = newHeight * 0.125; // Player height as 1/8th of the canvas height
+      player.y = newHeight - player.height; // Set player y based on canvas height
+
+      // Adjust gravity and jump velocity based on height
+      gravity = newHeight * 0.0025; // Reduced gravity to make jump feel better
+      jumpVelocity = -newHeight * 0.045; // Adjusted jump velocity for a more reasonable jump height
+    }
+
+    // Function to start the game
+    function startGame() {
+      // Reset game state
+      score = 0;
+      player.dy = 0;
+      player.isJumping = false; // Reset jumping states
+      player.isDoubleJumping = false; // Reset double jump state
+      obstacles = []; // Clear obstacles
+      bullets = []; // Clear bullets
+      lastSpawnTime = Date.now(); // Reset the last spawn time
+      gameRunning = true; // Start the game
+      gameOverMessage.style.display = 'none'; // Hide the game over message
+      gameInterval = requestAnimationFrame(updateGame); // Start the game loop
+    }
+
+    // Function to update the spawn interval based on score
+    function updateSpawnInterval() {
+      if (score > 10 && score <= 20) {
+        obstacleSpawnInterval = 1500; // Increase difficulty
+      } else if (score > 20) {
+        obstacleSpawnInterval = 1000; // Further increase difficulty
+      }
+    }
+
+    // Main game loop function
+    function updateGame() {
+      ctx.fillStyle = 'lightblue'; // Set a background color
+      ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas with background color
+
+      // Update player
+      if (player.isJumping || player.isDoubleJumping) {
+        player.dy += gravity; // Apply gravity
+        player.y += player.dy; // Move player downwards
+
+        // Reset jump when player lands
+        if (player.y >= canvas.height - player.height) {
+          player.isJumping = false;
+          player.isDoubleJumping = false; // Reset double jumping when landing
+          player.dy = 0;
+          player.y = canvas.height - player.height; // Ensure player stays on the ground
+        }
+      }
+      ctx.fillStyle = 'green'; // Set player color
+      ctx.fillRect(player.x, player.y, player.width, player.height); // Draw the player
+
+      // Update bullets
+      bullets.forEach((bullet, index) => {
+        bullet.x += bullet.speed; // Move the bullet to the right
+        ctx.fillStyle = 'yellow'; // Set bullet color
+        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height); // Draw the bullet
+
+        // Check if bullet is off-screen
+        if (bullet.x > canvas.width) {
+          bullets.splice(index, 1); // Remove bullet if it goes off-screen
+        }
+      });
+
+      // Update spawn interval based on score
+      updateSpawnInterval();
+
+      // Check if it's time to spawn a new obstacle
+      const currentTime = Date.now();
+      if (currentTime - lastSpawnTime > obstacleSpawnInterval && obstacles.length < maxObstacles) {
+        const obstacleType = Math.random() < 0.5 ? 'ground' : 'floating'; // Randomly choose obstacle type
+        const yPosition = obstacleType === 'ground' ? canvas.height - player.height : Math.random() < 0.5 ? canvas.height - player.height - 50 : canvas.height - player.height - 100;
+        
+        obstacles.push({
+          x: canvas.width,
+          y: yPosition, // Spawn above player height for floating
+          width: player.width,
+          height: player.height,
+          type: obstacleType // Store the type of obstacle
+        }); // Spawn a new obstacle
+        lastSpawnTime = currentTime; // Reset the spawn time
+      }
+
+      // Move and draw obstacles
+      let obstaclesToRemove = []; // Array to hold obstacles to remove
+      obstacles.forEach((obstacle, index) => {
+        obstacle.x -= obstacleSpeed; // Move the obstacle to the left
+        if (obstacle.type === 'floating') {
+          obstacle.y += Math.sin(obstacle.x / 100) * 1; // "Smoke" movement for floating obstacles
+        }
+
+        ctx.fillStyle = obstacle.type === 'ground' ? 'red' : 'orange'; // Set color based on type
+        ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height); // Draw the obstacle
+
+        // Collision detection between bullet and obstacle
+        bullets.forEach((bullet, bulletIndex) => {
+          if (
+            bullet.x < obstacle.x + obstacle.width &&
+            bullet.x + bullet.width > obstacle.x &&
+            bullet.y < obstacle.y + obstacle.height &&
+            bullet.y + bullet.height > obstacle.y
+          ) {
+            obstaclesToRemove.push(index); // Mark the obstacle for removal
+            bullets.splice(bulletIndex, 1); // Remove the bullet
+            score += 5; // Update score
+          }
+        });
+
+        // Collision detection between player and obstacle
+        if (
+          player.x < obstacle.x + obstacle.width &&
+          player.x + player.width > obstacle.x &&
+          player.y < obstacle.y + obstacle.height &&
+          player.y + player.height > obstacle.y
+        ) {
+          endGame(); // Call the end game function on collision
+          return; // Exit the function to prevent further updates
+        }
+
+        // Mark off-screen obstacles for removal
+        if (obstacle.x + obstacle.width < 0) {
+          obstaclesToRemove.push(index); // Store index of obstacle to remove
+          score++; // Increase score when an obstacle is cleared
+        }
+      });
+
+      // Remove marked obstacles after the loop
+      for (let index of obstaclesToRemove.reverse()) {
+        obstacles.splice(index, 1); // Remove the obstacle from the array
+      }
+
+      // Display score
+      ctx.fillStyle = 'black'; // Set score color
+      ctx.font = '20px Arial';
+      ctx.fillText(`Score: ${score}`, 10, 30); // Show the current score
+
+      // Continue the game loop if the game is running
+      if (gameRunning) {
+        gameInterval = requestAnimationFrame(updateGame); // Continue the animation
+      }
+    }
+
+    // Function to end the game
+    function endGame() {
+      gameRunning = false; // Stop the game
+      finalScoreElement.textContent = score; // Update final score in the message
+      gameOverMessage.style.display = 'block'; // Show game over message
+      cancelAnimationFrame(gameInterval); // Stop the animation frame
+    }
+
+    // Function to reset the game state
+    function resetGame() {
+      startGame(); // Restart the game
+    }
+
+    // Player controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === ' ' && gameRunning) { // Jump with space bar
+        if (!player.isJumping) {
+          player.isJumping = true; // Enable jumping
+          player.dy = jumpVelocity; // Set jump velocity
+        } else if (player.isJumping && !player.isDoubleJumping) {
+          player.isDoubleJumping = true; // Allow double jump
+          player.dy = jumpVelocity; // Set jump velocity for double jump
+        }
+      }
+
+      if (e.key === 'a' && gameRunning) { // Press 'A' to shoot
+        const currentTime = Date.now();
+        if (currentTime - lastBulletTime > bulletCooldown) { // Check cooldown
+          bullets.push({ x: player.x + player.width, y: player.y + player.height / 4, width: 5, height: 5, speed: 10 }); // Create a new bullet
+          lastBulletTime = currentTime; // Reset last bullet time
+        }
+      }
+
+      if (e.key === 'r' && !gameRunning) { // Press 'R' to reset the game after game over
+        resetGame(); // Reset the game state
+      }
+    });
+
+    // Resize canvas when the window is resized
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); // Initial canvas size setup
+    startGame(); // Start the game
+  </script>
+</body>
+</html>
