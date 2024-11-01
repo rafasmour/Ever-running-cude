@@ -5,9 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Responsive Endless Runner</title>
   <style>
-    body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; position: relative; }
-    canvas { border: 1px solid black; display: block; }
-    #gameOverMessage { position: absolute; text-align: center; font-size: 30px; color: red; display: none; }
+     body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+        background: linear-gradient(to top, #87CEEB, #B0E0E6);
+    overflow: hidden;
+    }
+
+
+  canvas {
+    border: 5px solid #FF6B6B; /* Coral Red border for a vibrant look */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 0 20px rgba(0, 107, 107, 0.5); /* Soft shadow for depth */
+    background: rgba(255, 255, 255, 0.1); /* Slight transparent background for the canvas */
+    backdrop-filter: blur(5px); /* Optional: blurring effect behind the canvas */
+  }
+
+  #gameOverMessage {
+    position: absolute;
+    text-align: center;
+    font-size: 30px;
+    color: red;
+    display: none;
+  }
+   
   </style>
 </head>
 <body>
@@ -39,6 +63,7 @@
     let gravity;
     let jumpVelocity;
     let obstacleSpeed;
+    
     let obstacleSpawnInterval;
     let bulletCooldown = 500;
     let lastBulletTime = 0;
@@ -46,6 +71,14 @@
     let gameRunning = false;
     let height;
     let width;
+    function drawBackground() {
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, '#F1F9FF'); // Light blue at the top
+      gradient.addColorStop(1, '#A7D3E0'); // Darker blue at the bottom
+
+      ctx.fillStyle = gradient; // Set the gradient as the fill style
+      ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas
+    }
     function resizeCanvas() {
       const aspectRatio = 800 / 400;
       const newWidth = window.innerWidth < 800 ? window.innerWidth : 800;
@@ -86,9 +119,7 @@
     }
 
     function updateGame() {
-      ctx.fillStyle = 'lightblue';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+      drawBackground(); // Draw the gradient background
       // Update player
       if (player.isJumping || player.isDoubleJumping) {
         player.dy += gravity;
@@ -101,7 +132,7 @@
           player.y = canvas.height - player.height;
         }
       }
-      ctx.fillStyle = 'green';
+      ctx.fillStyle = '#FF6B6B'; // Coral Red
       ctx.fillRect(player.x, player.y, player.width, player.height);
 
       // Update bullets
@@ -165,7 +196,7 @@
           
         }
 
-        ctx.fillStyle = obstacle.type === 'ground' ? 'red' : (obstacle.type === 'floating' ? 'orange' : 'purple');
+        ctx.fillStyle = obstacle.type === 'ground' ? '#FFC300' : (obstacle.type === 'floating' ? '#6BFF6B' : 'purple');
         ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
 
         // Collision detection between bullet and obstacle
@@ -213,7 +244,6 @@
       ctx.fillStyle = 'black';
       ctx.font = '20px Arial';
       ctx.fillText(`Score: ${score}`, 10, 30);
-
       // Continue the game loop if the game is running
       if (gameRunning) {
         gameInterval = requestAnimationFrame(updateGame);
