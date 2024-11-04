@@ -1,44 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Endless Runner</title>
-  <style>
-     body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-        background: linear-gradient(to top, #87CEEB, #B0E0E6);
-    overflow: hidden;
-    }
-
-
-  canvas {
-    border: 5px solid #FF6B6B; /* Coral Red border for a vibrant look */
-    border-radius: 15px; /* Rounded corners */
-    box-shadow: 0 0 20px rgba(0, 107, 107, 0.5); /* Soft shadow for depth */
-    background: rgba(255, 255, 255, 0.1); /* Slight transparent background for the canvas */
-    backdrop-filter: blur(5px); /* Optional: blurring effect behind the canvas */
-  }
-
-  #gameOverMessage {
-    position: absolute;
-    text-align: center;
-    font-size: 30px;
-    color: red;
-    display: none;
-  }
-   
-  </style>
-</head>
-<body>
-  <canvas id="gameCanvas"></canvas>
-  <div id="gameOverMessage">Game Over!<br>Your Final Score: <span id="finalScore"></span><br>Press 'R' to Restart</div>
-
-  <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const gameOverMessage = document.getElementById('gameOverMessage');
@@ -305,6 +264,3 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
     startGame();
-  </script>
-</body>
-</html>

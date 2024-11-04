@@ -1,0 +1,16 @@
+{
+  "name": "endless-running-cube",
+  "version": "0.0.0",
+  "description": "A endlessly running cube",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index"
+  },
+  "author": "Rafael Mourouzidis",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "nodemon": "^3.1.7"
+  }
+}
