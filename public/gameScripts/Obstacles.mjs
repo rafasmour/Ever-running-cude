@@ -9,7 +9,25 @@ export class Obstacles {
         this.score = 0;
     }
     updateSpawnInterval(score){
-
+        switch (score) {
+            case 20:
+                this.spawnInterval = 1300;
+                break; 
+            case 40:
+                this.spawnInterval = 1100;
+                break; 
+            case 60:
+                this.spawnInterval = 900;
+                break; 
+            case 80:
+                this.spawnInterval = 700;
+                break;
+            case 100:
+                this.spawnInverval = 500;
+                break;
+            default:
+                break;
+        }
     }
     ground(width, height){
         this.obstacles.push({
@@ -17,7 +35,7 @@ export class Obstacles {
             y: height - height * 0.125,
             width: width * 0.0625,
             height: height * 0.125,
-            type: 'ground'
+            type: 'ground',
         });
     }
     floating(width, height){
@@ -70,6 +88,7 @@ export class Obstacles {
                 this.obstacles[i].y = (Math.sin(this.obstacles[i].floatOffset)) + (this.obstacles[i].y);
             }
         }
+        this.updateSpawnInterval(this.score);
     }   
 }
 

@@ -35,7 +35,9 @@ export class Canvas {
         this.ctx.fillStyle = 'yellow';
         this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     }
-    drawScore(bullet){
-
+    drawScore(score){
+        this.ctx.fillStyle = 'black';
+        this.ctx.font = '2vw Roboto';
+        this.ctx.font(`Score: ${score}`, 20, 400)
     }
 }
