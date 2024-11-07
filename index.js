@@ -6,11 +6,11 @@ const app = express();
 const port = process.env.PORT || 80;
 app.use(express.static(path.join(__dirname, 'public')));
 app.use( '^/$|/index(.html)?', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/html/index.html'));
+    res.sendFile(path.join(__dirname, './index.html'));
 })
 
 app.all('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/html/index.html'));
+    res.status(404);
 });
 
 app.listen(port, () => {
