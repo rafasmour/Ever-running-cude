@@ -6,8 +6,7 @@ export class Obstacles {
     constructor(canvasWidth) {
         this.obstacles = [];
         this.spawnInterval = 1500;
-        this.speed = canvasWidth * 0.01;
-        this.max = 5;
+        this.speed = 1;
         this.lastSpawnTime = 0;
         this.score = 0;
     }
@@ -73,9 +72,9 @@ export class Obstacles {
             }
             console.log(this.obstacles)
         }
-    remove(obstacle){
+    remove(i){
         this.score++;
-        this.obstacles.splice(obstacle, 1)
+        this.obstacles.splice(i, 1)
     }
     update(canvasWidth, canvasHeight, fixedWidth, fixedHeight) {
         const currentTime = Date.now(); 
@@ -86,8 +85,8 @@ export class Obstacles {
         } 
         for(let i = 0; i < this.obstacles.length; i++){
             this.obstacles[i].x -=this.speed;
-            if(this.obstacles[i].x + this.obstacles[i].canvasWidth <=0)
-                this.remove(this.obstacles[i])
+            if(this.obstacles[i].x + this.obstacles[i].width <=0)
+                this.remove(i)
             if(this.obstacles[i].type == 'floating'){
                 this.obstacles[i].float()
             }

@@ -24,7 +24,7 @@ function drawGame() {
     draw.drawScore(obstacles.score);
 }
 function startGame() {
-    player.resize(draw.canvas.width, draw.canvas.height)
+    player.resize(fixedWidth, fixedHeight, draw.canvas.height)
     draw.drawBackground();
     obstacles.lastSpawnTime = Date.now();
     player.lastBulletTime = Date.now();
@@ -33,7 +33,7 @@ function startGame() {
 
 function updateGame() {
     player.update(draw.gravity, draw.canvas.width, draw.canvas.height);
-    obstacles.update(fixedHeight, fixedWidth, fixedHeight, fixedWidth)
+    obstacles.update(draw.canvas.width, draw.canvas.height, fixedWidth, fixedHeight)
     for(const obstacle in obstacles.obstacles){
         if(collide(player,obstacles.obstacles[obstacle])){
             gameOver();
@@ -62,7 +62,7 @@ document.addEventListener('keydown', (e) => {
         console.log('startgame')
     }
 })
-document.addEventListener('keydown', (key) => player.ControlsDown(key.key));
+document.addEventListener('keydown', (key) => player.ControlsDown(key.key, draw.canvas.Height));
 document.addEventListener('keyup', (key) => player.ControlsUp(key.key, draw.canvas.height));
 document.addEventListener('resize', draw.resizeCanvas());
 startGame();

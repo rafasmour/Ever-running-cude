@@ -10,17 +10,17 @@ export class Player {
         this.isDoubleJumping = false;
         this.isSliding = false;
         this.jumpVelocity = 0;
-        this.bullets = []
+        this.bullets = [];
         this.bulletCooldown = 1500;
         this.lastBulletTime = 500;
         this.bulletSpeed = 10;
     }
-    resize(width, height){
-        this.width = width * 0.0625;
-        this.height = height * 0.125;
+    resize(fixedWidth, fixedHeight, canvasHeight){
+        this.width = fixedWidth;
+        this.height = fixedHeight;
         this.x = 50;
-        this.y = height - this.height;
-        this.dy =0;
+        this.y = canvasHeight - this.height;
+        this.dy = 0;
         this.jumpVelocity = -this.height * 0.3;
         this.isJumping = false;
         this.isDoubleJumping = false;
@@ -29,7 +29,7 @@ export class Player {
     removeBullet(bullet) {
         this.bullets.splice(bullet, 1);
     }
-    ControlsDown(key) {
+    ControlsDown(key, canvasHeight) {
         switch (key) {
             case ' ':
                 if(!this.isJumping){
@@ -63,34 +63,33 @@ export class Player {
                 }
         }
     }
-    ControlsUp(key, height) {
+    ControlsUp(key, canvasHeight) {
         switch (key) {
             case 's':
                 if(this.isSliding){
                     this.isSliding = false;
                     this.height *= 2;
-                    this.y = height - this.height;
+                    this.y = canvasHeight - this.height;
                 }
         }
     }
     destroyBullet(bullet){
         this.bullets.splice(bullet, 1);
     }
-    update(gravity, width, height){
+    update(gravity, canvasWidth, canvasHeight){
         if(this.isJumping || this.isDoubleJumping){
             this.dy += gravity;
             this.y += this.dy;
-            if (this.y >= height - this.height) {
-            this.isJumping = false;
-            this.isDoubleJumping = false;
-            this.dy = 0;
-            this.y = height - this.height;
+            if (this.y >= canvasHeight - this.height) {
+                this.isJumping = false;
+                this.isDoubleJumping = false;
+                this.dy = 0;
+                this.y = canvasHeight - this.height;
             }
         }
         for(let i = 0; i < this.bullets.length; i++){
-            
             this.bullets[i].x += this.bulletSpeed;
-            if(this.bullets[i].x > width)
+            if(this.bullets[i].x > canvasWidth)
                 this.removeBullet(this.bullets[i])
         }
     }
