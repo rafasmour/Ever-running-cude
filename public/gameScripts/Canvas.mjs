@@ -23,8 +23,8 @@ export class Canvas {
       
        
     }
-    playerGradient(){
-        const gradient = this.ctx.createLinearGradient(playerX, playerY, playerX, playerY + playerHeight);
+    playerGradient(playerX, playerY, playerWidth, playerHeight){
+        const gradient = this.ctx.createLinearGradient(playerX, playerY, playerWidth, playerY + playerHeight);
         gradient.addColorStop(0.4, "#FFD700"); 
         gradient.addColorStop(0.9, "#FFA500");
     }
@@ -33,8 +33,9 @@ export class Canvas {
         this.ctx.shadowBlur = 10;  
         this.ctx.shadowOffsetX = -5;  
         this.ctx.shadowOffsetY = 5;  
-        let gradient = this.playerGradient();
-        this.ctx.fillStyle = gradient;
+        this.ctx.fillStyle = "red";
+        // let gradient = this.playerGradient(playerX, playerY, playerWidth, playerHeight);
+        
         this.ctx.fillRect(playerX, playerY, playerWidth, playerHeight);
     }
     drawObstacle(obstacle){
