@@ -6,7 +6,7 @@ export class Obstacles {
     constructor(canvasWidth) {
         this.obstacles = [];
         this.spawnInterval = 1500;
-        this.speed = 1;
+        this.speed = canvasWidth * 0.01;
         this.lastSpawnTime = 0;
         this.score = 0;
     }
@@ -40,7 +40,6 @@ export class Obstacles {
         ));
     }
     floating(canvasWidth, canvasHeight, fixedWidth, fixedHeight){
-        console.log(canvasWidth, canvasHeight, fixedWidth, fixedHeight)
         this.obstacles.push(
             new Floating(
                 canvasWidth,
@@ -61,7 +60,6 @@ export class Obstacles {
         )
     }
     spawn(canvasWidth, canvasHeight, fixedWidth, fixedHeight){
-        console.log(canvasWidth, canvasHeight, fixedWidth, fixedHeight)
             const obstacleType = Math.random();
             if (obstacleType < 0.33) {
                 this.ground(canvasWidth, canvasHeight, fixedWidth, fixedHeight)
@@ -70,7 +68,6 @@ export class Obstacles {
             } else {
                 this.pillar(canvasWidth, canvasHeight, fixedWidth, fixedHeight)
             }
-            console.log(this.obstacles)
         }
     remove(i){
         this.score++;
@@ -78,8 +75,7 @@ export class Obstacles {
     }
     update(canvasWidth, canvasHeight, fixedWidth, fixedHeight) {
         const currentTime = Date.now(); 
-        if (currentTime - this.lastSpawnTime > this.spawnInterval && this.obstacles.length < this.max) {
-            console.log(canvasWidth, canvasHeight, fixedWidth, fixedHeight)
+        if (currentTime - this.lastSpawnTime > this.spawnInterval) {
             this.spawn(canvasWidth, canvasHeight, fixedWidth, fixedHeight)
             this.lastSpawnTime = currentTime;
         } 
@@ -92,7 +88,7 @@ export class Obstacles {
             }
         }
         this.updateSpawnInterval(this.score);
-    }   
+    } 
 }
 
 

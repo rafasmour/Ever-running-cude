@@ -21,6 +21,9 @@ function drawGame() {
     player.bullets.forEach((bullet) => {
         draw.drawBullet(bullet)
     })
+    if(draw.animation){
+        draw.animateDisintegration();
+    }
     draw.drawScore(obstacles.score);
 }
 function startGame() {
@@ -42,7 +45,9 @@ function updateGame() {
         if(player.bullets.length > 0)
             for(const bullet in player.bullets){
                 if(collide(player.bullets[bullet], obstacles.obstacles[obstacle])){
+                    draw.createParts(obstacles.obstacles[obstacle])
                     if(obstacles.obstacles[bullet].type == 'floating'){
+                        draw.createParts(player.bullets[bullet])
                         obstacles.remove(obstacles.obstacles[obstacle])
                         obstacles.score++;
                     }
@@ -54,6 +59,7 @@ function updateGame() {
     requestAnimationFrame(updateGame);
 }
 function gameOver(){
+    draw.createParts(player)
     draw.drawGameOver(obstacles.score)
 }
 document.addEventListener('keydown', (e) => {

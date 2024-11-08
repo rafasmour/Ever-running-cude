@@ -1,10 +1,9 @@
 export class Obstacle {
-    constructor(x, y, width, height){
-        console.log(y)
+    constructor(x, y, width, height, color){
         this.x = x
         this.y = y
         this.width = width
         this.height = height
-        console.log(this.y)
+        this.color = color
     }
 }

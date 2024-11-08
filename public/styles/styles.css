@@ -4,13 +4,14 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-        background: linear-gradient(to top, #87CEEB, #B0E0E6);
+    background: linear-gradient(to bottom, #FFDEE9, #B5FFFC);
     overflow: hidden;
     }
 
 
   canvas {
-    border: 5px solid #E76F51; /* Coral Red border for a vibrant look */
+    border: 5px solid #4682B4;
+    border-bottom-color: #E76F51; /* Coral Red border for a vibrant look */
     border-radius: 15px; /* Rounded corners */
     box-shadow: 0 0 20px rgba(0, 107, 107, 0.5); /* Soft shadow for depth */
     background: #457B9D; /* Slight transparent background for the canvas */

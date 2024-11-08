@@ -14,6 +14,7 @@ export class Player {
         this.bulletCooldown = 1500;
         this.lastBulletTime = 500;
         this.bulletSpeed = 10;
+        this.color = "#FFA500";
     }
     resize(fixedWidth, fixedHeight, canvasHeight){
         this.width = fixedWidth;
@@ -57,7 +58,8 @@ export class Player {
                         x: this.x + this.width,
                         y: this.y,
                         width: this.width,
-                        height: this.height
+                        height: this.height,
+                        color: '#E76F51'
                     })
                     this.lastBulletTime = Date.now();
                 }
