@@ -1,4 +1,4 @@
-import { Obstacle } from "./Obstacle.mjs";
+import { Obstacle } from "../ObstacleBase.mjs";
 
 export class Pillar extends Obstacle{
     constructor(x, y, width, height){

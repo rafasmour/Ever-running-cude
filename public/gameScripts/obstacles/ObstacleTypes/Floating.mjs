@@ -1,4 +1,4 @@
-import { Obstacle } from "./Obstacle.mjs";
+import { Obstacle } from "../ObstacleBase.mjs";
 
 export class Floating extends Obstacle {
     

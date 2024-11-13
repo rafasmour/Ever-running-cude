@@ -1,3 +1,6 @@
+import { Background } from "./background.mjs";
+import { ColorManager } from "./colorManager.mjs";
+
 export class Canvas {
 
     constructor(canvas) {
@@ -6,45 +9,13 @@ export class Canvas {
         this.gravity;
         this.jumpVelocity;  
         this.animation = false;    
-        this.objectsToAnimate = [];         
+        this.objectsToAnimate = [];
     }
     resizeCanvas() {
         const aspectRatio = 800 / 400;  
         this.canvas.width = window.innerWidth < 800 ? window.innerWidth : 800;
         this.canvas.height = this.canvas.width / aspectRatio;
         this.gravity = this.canvas.height * 0.0025;
-    }
-    drawBackground() {
-        const skyGradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-        skyGradient.addColorStop(0, "#87CEEB"); 
-        skyGradient.addColorStop(1, "#4682B4"); 
-        this.ctx.fillStyle = skyGradient;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      
-       
-    }
-    playerGradient(playerX, playerY, playerWidth, playerHeight){
-        const gradient = this.ctx.createLinearGradient(playerX, playerY, playerWidth, playerY + playerHeight);
-        gradient.addColorStop(0.4, "#FFD700"); 
-        gradient.addColorStop(0.9, "#FFA500");
-    }
-    drawPlayer(playerX, playerY, playerWidth, playerHeight){
-        this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-        this.ctx.shadowBlur = 10;  
-        this.ctx.shadowOffsetX = -5;  
-        this.ctx.shadowOffsetY = 5;  
-        this.ctx.fillStyle = "red";
-        // let gradient = this.playerGradient(playerX, playerY, playerWidth, playerHeight);
-        
-        this.ctx.fillRect(playerX, playerY, playerWidth, playerHeight);
-    }
-    drawObstacle(obstacle){
-        this.ctx.fillStyle = obstacle.color;
-        this.ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-    }
-    drawBullet(bullet){
-        this.ctx.fillStyle = bullet.color;
-        this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     }
     drawScore(score){
         this.ctx.shadowColor = '';
@@ -72,12 +43,14 @@ export class Canvas {
                 l++;
                 j = 5;
             }
+            console.log(object.color)
             let part = {
                 x: object.x + (object.width / j),
                 y: object.y + (object.width / l),
                 size: object.width / 4 + Math.random() * 5,  // Random size for variation
                 dx: (Math.random() - 0.5) * 4,  // Random X velocity
                 dy: (Math.random() - 0.5) * 4,  // Random Y velocity
+                color: new ColorManager(object.color),
                 alpha: 1  // Opacity of the piece
             };
             this.objectsToAnimate.push(part);
@@ -86,9 +59,8 @@ export class Canvas {
         this.animation = true;
     }
     animateDisintegration() {
-        console.log('animate')
         this.objectsToAnimate.forEach((part, index) => {
-            this.ctx.fillStyle = 'rgba(0, 188, 212, ' + part.alpha + ')';  // Faded color
+            this.ctx.fillStyle = part.color.getRGBA(part.alpha);
             this.ctx.fillRect(part.x, part.y, part.size, part.size);
 
             // Move the parts

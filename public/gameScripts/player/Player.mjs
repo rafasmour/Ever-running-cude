@@ -1,4 +1,4 @@
-
+import { Bullet } from "./playerWeapons/Bullet.mjs";
 export class Player {
     constructor() {
         this.x = 0;
@@ -10,10 +10,7 @@ export class Player {
         this.isDoubleJumping = false;
         this.isSliding = false;
         this.jumpVelocity = 0;
-        this.bullets = [];
-        this.bulletCooldown = 1500;
-        this.lastBulletTime = 500;
-        this.bulletSpeed = 10;
+        this.bullet = new Bullet();
         this.color = "#FFA500";
     }
     resize(fixedWidth, fixedHeight, canvasHeight){
@@ -27,10 +24,7 @@ export class Player {
         this.isDoubleJumping = false;
         this.isSliding = false;
     }
-    removeBullet(bullet) {
-        this.bullets.splice(bullet, 1);
-    }
-    ControlsDown(key, canvasHeight) {
+    ControlsDown(key) {
         switch (key) {
             case ' ':
                 if(!this.isJumping){
@@ -48,21 +42,11 @@ export class Player {
                     this.y += this.height;
                     this.isjumping = false;
                     this.isDoubleJumping = false;
-                    this.dy = 5;
+                    this.dy = 20;
                 }
                 break;
             case 'a':
-                const currentTime = Date.now();
-                if(currentTime - this.lastBulletTime > this.bulletCooldown){
-                    this.bullets.push({
-                        x: this.x + this.width,
-                        y: this.y,
-                        width: this.width,
-                        height: this.height,
-                        color: '#E76F51'
-                    })
-                    this.lastBulletTime = Date.now();
-                }
+                this.bullet.addBullet(this.x, this.y, this.width, this.height)
         }
     }
     ControlsUp(key, canvasHeight) {
@@ -75,9 +59,6 @@ export class Player {
                 }
         }
     }
-    destroyBullet(bullet){
-        this.bullets.splice(bullet, 1);
-    }
     update(gravity, canvasWidth, canvasHeight){
         if(this.isJumping || this.isDoubleJumping){
             this.dy += gravity;
@@ -89,10 +70,22 @@ export class Player {
                 this.y = canvasHeight - this.height;
             }
         }
-        for(let i = 0; i < this.bullets.length; i++){
-            this.bullets[i].x += this.bulletSpeed;
-            if(this.bullets[i].x > canvasWidth)
-                this.removeBullet(this.bullets[i])
-        }
+        this.bullet.update(canvasWidth);
+    }
+    playerGradient(ctx) {
+        const gradient = ctx.createLinearGradient(this.x, this.y, this.width, this.height);
+        gradient.addColorStop(0, "#FFD700"); // Gold
+        gradient.addColorStop(1, "#FFA500"); // Orange
+        return gradient; // Return the gradient to use elsewhere
+    }
+    draw(ctx){
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowBlur = 10;  
+        ctx.shadowOffsetX = -5;  
+        ctx.shadowOffsetY = 5;  
+        let gradient = this.playerGradient(ctx);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        this.bullet.draw(ctx);
     }
 }

@@ -1,12 +1,12 @@
-import { Floating } from "./Floating.mjs";
-import { Ground } from "./Ground.mjs";
-import { Pillar } from "./Pillar.mjs";
+import { Floating } from "./ObstacleTypes/Floating.mjs";
+import { Ground } from "./ObstacleTypes/Ground.mjs";
+import { Pillar } from "./ObstacleTypes/Pillar.mjs";
 
 export class Obstacles {
-    constructor(canvasWidth) {
+    constructor() {
         this.obstacles = [];
         this.spawnInterval = 1500;
-        this.speed = canvasWidth * 0.01;
+        this.speed = 8;
         this.lastSpawnTime = 0;
         this.score = 0;
     }
@@ -88,7 +88,12 @@ export class Obstacles {
             }
         }
         this.updateSpawnInterval(this.score);
-    } 
+    }
+    draw(ctx){
+        this.obstacles.forEach((obstacle) => {
+            obstacle.draw(ctx)
+        })
+    }
 }
 
 
