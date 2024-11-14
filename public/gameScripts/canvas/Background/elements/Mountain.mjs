@@ -1,12 +1,20 @@
-export class Background {
+export class Mountain {
     constructor(){
-        this.mountains = []
-        this.mountainSpeed = 5
-        this.mountainSpawnInterval = 1500;
+        this.mountains = [],
+        this.mountainSpeed = 5,
+        this.mountainSpawnInterval = 1000,
         this.mountainLastSpawnTime
     }
     getRandomMountainColor() {
-        const colors = ['#7B8D92', '#A4B0C6', '#B1C3D1'];
+        const colors = [
+            '#6B705C', // Olive green-brown for distant mountains
+            '#A5A58D', // Light brownish green
+            '#B7B7A4', // Pale stone gray
+            '#D6D3C4', // Sandy brown for sunlit areas
+            '#8D99AE', // Cool gray-blue for shadowed areas
+            '#4A4E69', // Deep purple-gray for distant silhouettes
+            '#283618', // Dark forest green for dense forest areas
+        ];
         return colors[Math.floor(Math.random() * colors.length)];
     }
     spawnMountain(canvasWidth, canvasHeight, fixedHeight, fixedWidth){
@@ -17,7 +25,7 @@ export class Background {
             this.mountains.push(
                 {
                     x: canvasWidth + width,
-                    y: canvasHeight - fixedHeight,
+                    y: canvasHeight - height,
                     width: width,
                     height: height,
                     speed: Math.random() * 0.5 + 0.3, 
@@ -26,10 +34,6 @@ export class Background {
             )
             this.mountainLastSpawnTime = currentTime;
         }
-        
-    }
-    destroyMountain(mountain){
-        this.mountains.splice(mountain, 1);
     }
     update(canvasWidth, canvasHeight, fixedWidth, fixedHeight){
         this.spawnMountain(canvasWidth, canvasHeight, fixedWidth, fixedHeight);
@@ -39,26 +43,19 @@ export class Background {
                 this.destroyMountain(this.mountains[i])
         }
     }
-    skyGradient(ctx, canvasHeight){
-        const skyGradient = ctx.createLinearGradient(0, 0, 0, canvasHeight);
-        skyGradient.addColorStop(0, "#87CEEB"); 
-        skyGradient.addColorStop(1, "#4682B4");
-        return skyGradient
+    destroyMountain(mountain) {
+        this.mountains.splice(mountain, 1);
     }
-    drawMountain(ctx, mountain){
+    drawMountain(ctx, mountain) {
         ctx.beginPath();
-        ctx.moveTo(mountain.x, mountain.y); 
-        ctx.lineTo((mountain.x - mountain.width) / 2, mountain.y + mountain.height);
-        ctx.lineTo((mountain.x + mountain.width) / 2, mountain.y + mountain.height);
-        ctx.closePath(); 
+        ctx.moveTo(mountain.x, mountain.y);
+        ctx.lineTo(mountain.x - mountain.width / 2, mountain.y + mountain.height);
+        ctx.lineTo(mountain.x + mountain.width / 2, mountain.y + mountain.height); 
         ctx.fillStyle = mountain.color;
         ctx.fill(); 
         ctx.stroke();
     }
-    draw(ctx, canvasWidth, canvasHeight) {
-        const skyGradient = this.skyGradient(ctx, canvasHeight);
-        ctx.fillStyle = skyGradient;
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    draw(ctx){
         for(let i = 0; i < this.mountains.length; i++){
             this.drawMountain(ctx, this.mountains[i])
         }

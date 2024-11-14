@@ -40,14 +40,16 @@ export class Player {
                     this.isSliding = true;
                     this.height /= 2;
                     this.y += this.height;
-                    this.isjumping = false;
-                    this.isDoubleJumping = false;
+                    this.isjumping = true;
+                    this.isDoubleJumping = true;
                     this.dy = 20;
                 }
                 break;
             case 'a':
                 this.bullet.addBullet(this.x, this.y, this.width, this.height)
+            
         }
+        console.log(this.isJumping, this.isDoubleJumping)
     }
     ControlsUp(key, canvasHeight) {
         switch (key) {

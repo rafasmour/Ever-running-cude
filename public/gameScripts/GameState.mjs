@@ -2,7 +2,7 @@ import { Canvas } from './canvas/Canvas.mjs'
 import { Player } from './player/Player.mjs'
 import { Obstacles } from './obstacles/Obstacles.mjs'
 import { Collision } from './helperFunctions/Collision.mjs'
-import { Background } from './canvas/background.mjs';
+import { Background } from './canvas/Background/Background.mjs';
 
 const canvas = document.getElementById('gameCanvas');
 const draw = new Canvas(canvas);
@@ -31,7 +31,7 @@ function drawGame(drawPlayer) {
 }
 function startGame() {
     player.resize(fixedWidth, fixedHeight, canvasHeight)
-    background.mountainLastSpawnTime = Date.now();
+    background.mountain.mountainLastSpawnTime = Date.now();
     obstacles.lastSpawnTime = Date.now();
     player.bullet.lastBulletTime = Date.now();
     gameRunning = requestAnimationFrame(updateGame);

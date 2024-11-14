@@ -1,4 +1,3 @@
-import { Background } from "./background.mjs";
 import { ColorManager } from "./colorManager.mjs";
 
 export class Canvas {
