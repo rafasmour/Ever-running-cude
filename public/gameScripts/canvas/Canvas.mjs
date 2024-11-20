@@ -17,6 +17,7 @@ export class Canvas {
     }
     gameOver(score){
         this.canvas.style.animation = "shake 0.5s"
+        this.fillstyle = "white";
         this.ctx.textAlign = "center";
         this.ctx.fillText(`Game Over`, this.canvas.width/2, this.canvas.height / 2 - 50)
         this.ctx.fillText(`Press R To Restart`, this.canvas.width/2, this.canvas.height/2 + 50)

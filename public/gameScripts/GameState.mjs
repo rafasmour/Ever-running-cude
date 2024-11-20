@@ -14,9 +14,9 @@ let canvasHeight =  draw.canvas.height;
 let fixedHeight = canvasHeight * 0.125;
 let fixedWidth = canvasWidth * 0.0625;
 
-//rest of classesrafail
+//rest of classes
 
-const background = new Background(canvasHeight);
+const background = new Background(canvasHeight, canvasWidth);
 const player = new Player();
 const obstacles = new Obstacles();
 const animation = new AnimationMain();
@@ -32,7 +32,7 @@ function drawGame(drawPlayer) {
 }
 function startGame() {
     player.resize(fixedWidth, fixedHeight, canvasHeight)
-    background.mountain.mountainLastSpawnTime = Date.now();
+    background.mountain.lastSpawnTime = Date.now();
     obstacles.lastSpawnTime = Date.now();
     player.bullet.lastBulletTime = Date.now();
     gameRunning = requestAnimationFrame(updateGame);

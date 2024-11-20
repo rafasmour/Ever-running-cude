@@ -3,7 +3,7 @@ export class Mountain {
         this.mountains = [],
         this.mountainSpeed = 5,
         this.mountainSpawnInterval = 1000,
-        this.mountainLastSpawnTime
+        this.lastSpawnTime
     }
     getRandomMountainColor() {
         const colors = [
@@ -17,9 +17,9 @@ export class Mountain {
         ];
         return colors[Math.floor(Math.random() * colors.length)];
     }
-    spawnMountain(canvasWidth, canvasHeight, fixedHeight, fixedWidth){
+    spawnMountain(canvasWidth, canvasHeight){
         const currentTime = Date.now(); 
-        if (currentTime - this.mountainLastSpawnTime > this.mountainSpawnInterval) {
+        if (currentTime - this.lastSpawnTime > this.mountainSpawnInterval) {
             const width = Math.random() * 200 + 150
             const height = Math.random() * 50 + 100
             this.mountains.push(
@@ -32,7 +32,7 @@ export class Mountain {
                     color: this.getRandomMountainColor(),
                 }
             )
-            this.mountainLastSpawnTime = currentTime;
+            this.lastSpawnTime = currentTime;
         }
     }
     update(canvasWidth, canvasHeight, fixedWidth, fixedHeight){
