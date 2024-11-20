@@ -10,8 +10,8 @@ export class Obstacles {
         this.lastSpawnTime = 0;
         this.score = 0;
     }
-    updateSpawnInterval(score){
-        switch (score) {
+    updateSpawnInterval(){
+        switch (this.score) {
             case 20:
                 this.spawnInterval = 1300;
                 break; 
@@ -87,12 +87,23 @@ export class Obstacles {
                 this.obstacles[i].float()
             }
         }
-        this.updateSpawnInterval(this.score);
+        this.updateSpawnInterval()
+    }
+    drawScore(ctx){
+        ctx.shadowColor = '';
+        ctx.shadowBlur = 0;                    
+        ctx.shadowOffsetX = 0;                  
+        ctx.shadowOffsetY = 0; 
+        ctx.font = '1vw "Press Start 2P", sans-serif';
+        ctx.fillStyle = 'white';
+        ctx.fillText(`score: ${this.score}`,20,50);
+        // this.canvas.style.borderColor = ctx.fillStyle;
     }
     draw(ctx){
         this.obstacles.forEach((obstacle) => {
             obstacle.draw(ctx)
         })
+        this.drawScore(ctx);
     }
 }
 

@@ -3,20 +3,24 @@ import { Player } from './player/Player.mjs'
 import { Obstacles } from './obstacles/Obstacles.mjs'
 import { Collision } from './helperFunctions/Collision.mjs'
 import { Background } from './canvas/Background/Background.mjs';
-
+import { AnimationMain } from './canvas/Animations/AnimationMain.mjs';
 const canvas = document.getElementById('gameCanvas');
 const draw = new Canvas(canvas);
 draw.resizeCanvas()
-const background = new Background();
-const player = new Player();
-const obstacles = new Obstacles();
-const collide = Collision;
 
 //fixed values
 let canvasWidth =  draw.canvas.width;
 let canvasHeight =  draw.canvas.height;
 let fixedHeight = canvasHeight * 0.125;
 let fixedWidth = canvasWidth * 0.0625;
+
+//rest of classesrafail
+
+const background = new Background(canvasHeight);
+const player = new Player();
+const obstacles = new Obstacles();
+const animation = new AnimationMain();
+const collide = Collision;
 //boolean
 let gameRunning;
 function drawGame(drawPlayer) {
@@ -24,10 +28,7 @@ function drawGame(drawPlayer) {
     if(drawPlayer)
         player.draw(draw.ctx);
     obstacles.draw(draw.ctx)
-    if(draw.animation){
-        draw.animateDisintegration();
-    }
-    draw.drawScore(obstacles.score);
+    animation.animate(draw.ctx);
 }
 function startGame() {
     player.resize(fixedWidth, fixedHeight, canvasHeight)
@@ -45,15 +46,17 @@ function updateGame() {
         if(collide(player,obstacles.obstacles[obstacle])){
             gameOver();
             return;
-        }     
+        }
+        if(obstacles.obstacles[obstacle].x < canvasWidth )
+            player.score++
         if(player.bullet.bullets.length > 0)
             for(const bullet in player.bullet.bullets){
                 if(collide(player.bullet.bullets[bullet], obstacles.obstacles[obstacle])){
-                    draw.createParts(player.bullet.bullets[bullet])
+                    animation.disintegrate.createParts(player.bullet.bullets[bullet])
                     if(obstacles.obstacles[obstacle].type == 'floating'){
-                        draw.createParts(obstacles.obstacles[obstacle])
+                        animation.disintegrate.createParts(obstacles.obstacles[obstacle])
                         obstacles.remove(obstacles.obstacles[obstacle])
-                        obstacles.score++;
+                        player.score++;
                     }
                 player.bullet.removeBullet(player.bullet.bullets[bullet])
             }
@@ -64,14 +67,14 @@ function updateGame() {
 }
 function drawGameOver(){
     drawGame(false)
-    draw.drawGameOver(obstacles.score)
-    draw.animateDisintegration()
-    if(draw.objectsToAnimate.length == 0)
+    draw.gameOver(obstacles.score)
+    animation.animate(draw.ctx);
+    if(animation.disintegrate.parts.length == 0)
         return
     requestAnimationFrame(drawGameOver)
 }
 function gameOver(){
-    draw.createParts(player)
+    animation.disintegrate.createParts(player)
     requestAnimationFrame(drawGameOver)
 }
 document.addEventListener('keydown', (e) => {

@@ -80,14 +80,19 @@ export class Player {
         gradient.addColorStop(1, "#FFA500"); // Orange
         return gradient; // Return the gradient to use elsewhere
     }
+    
+    drawPlayer(ctx){
+        let gradient = this.playerGradient(ctx);
+        ctx.fillStyle = gradient;
+        
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        this.bullet.draw(ctx);
+    }
     draw(ctx){
         ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
         ctx.shadowBlur = 10;  
         ctx.shadowOffsetX = -5;  
-        ctx.shadowOffsetY = 5;  
-        let gradient = this.playerGradient(ctx);
-        ctx.fillStyle = gradient;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-        this.bullet.draw(ctx);
+        ctx.shadowOffsetY = 5; 
+        this.drawPlayer(ctx)
     }
 }
