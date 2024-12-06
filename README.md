@@ -22,15 +22,15 @@ Make sure you have the following installed:
    cd Ever-running-cube
 3. Start the development server:
   ```bash
-   npm install
+  npm install
   ```
 4. Start the development server:
   ```bash
-   npm start
+  npm start
   ```
 5. Open your browser at the URL the server runs on (usually
   ```
-   http://localhost:300)
+  http://localhost:300)
   ```
 6. **Have Fun!** 🎮
 
