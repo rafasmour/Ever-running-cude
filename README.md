@@ -14,24 +14,25 @@ Make sure you have the following installed:
 
 ## Steps to Run
 1. Clone the repository to your local machine:
-   ```bash
-   git clone https://github.com/rafasmour/Ever-running-cube.git
-   ```
+```bash
+git clone https://github.com/rafasmour/Ever-running-cube.git
+```
 2. Navigate to the project folder:
-   ```bash
-   cd Ever-running-cube
+```bash
+cd Ever-running-cube
+```
 3. Start the development server:
-  ```bash
-  npm install
-  ```
+```bash
+npm install
+```
 4. Start the development server:
-  ```bash
-  npm start
-  ```
+```bash
+npm start
+```
 5. Open your browser at the URL the server runs on (usually
-  ```
-  http://localhost:300)
-  ```
+```
+http://localhost:300)
+```
 6. **Have Fun!** 🎮
 
 ## Controls
